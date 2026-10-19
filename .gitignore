@@ -1,0 +1,58 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Virtual Environments
+.env
+.venv/
+.venv*/
+venv/
+venv*/
+env/
+env*/
+
+# Cached pretrained model files & checkpoints
+checkpoints/
+*.pt
+*.pth
+*.bin
+*.onnx
+*.safetensors
+*.ckpt
+.cache/
+huggingface/
+
+# Generated audio and MIDI files
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.mid
+*.midi
+outputs/audio/
+outputs/midi/
+outputs/test_audio/
+outputs/test_midi/
+outputs/temp_sections/
+
+# Keep evaluation CSV files
+!outputs/evaluation_results.csv
+!outputs/test_evaluation_results.csv
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini

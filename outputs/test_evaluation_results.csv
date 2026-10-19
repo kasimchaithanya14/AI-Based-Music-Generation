@@ -1,0 +1,10 @@
+file,duration_seconds,instrument_count,note_count,average_pitch,average_note_duration,notes_per_second,contains_notes
+classical_happy.mid,30.0,3,195,66.93,0.292,6.5,True
+classical_sad.mid,30.0,2,97,60.76,0.708,3.23,True
+classical_tense.mid,30.0,3,235,60.2,0.169,7.83,True
+electronic_happy.mid,30.0,2,163,67.2,0.362,5.43,True
+electronic_sad.mid,30.0,2,103,59.49,0.716,3.43,True
+electronic_tense.mid,30.0,2,230,69.15,0.161,7.67,True
+jazz_happy.mid,29.79,2,158,68.75,0.409,5.3,True
+jazz_sad.mid,30.0,2,113,60.82,0.824,3.77,True
+jazz_tense.mid,29.92,2,236,66.22,0.137,7.89,True

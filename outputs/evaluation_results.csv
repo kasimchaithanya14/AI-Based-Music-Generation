@@ -1,0 +1,12 @@
+file,duration_seconds,target_seconds,duration_difference_seconds,note_count,instrument_count,average_pitch,minimum_pitch,maximum_pitch,average_note_duration_seconds,notes_per_second,has_notes
+ai_long_test.mid,192.0,180,12.0,922,4,67.72,32,86,0.3,4.8,True
+ai_test.mid,7.5,180,-172.5,8,1,37.0,37,37,0.042,1.07,True
+classical_happy.mid,180.0,180,0.0,1073,12,69.46,60,84,0.355,5.96,True
+classical_sad.mid,180.0,180,0.0,616,12,61.14,48,72,0.732,3.42,True
+classical_tense.mid,180.0,180,0.0,2120,12,65.66,48,84,0.138,11.78,True
+electronic_tense.mid,180.0,180,0.0,1726,12,67.62,48,84,0.149,9.59,True
+first_music.mid,7.95,180,-172.05,16,1,65.44,60,72,0.45,2.01,True
+jazz_happy.mid,179.58,180,-0.42,943,11,68.99,60,84,0.42,5.25,True
+mood_happy.mid,31.83,180,-148.17,155,1,70.19,60,84,0.472,4.87,True
+mood_sad.mid,32.17,180,-147.83,82,1,60.48,50,71,0.896,2.55,True
+mood_tense.mid,31.88,180,-148.12,233,1,54.67,49,63,0.122,7.31,True

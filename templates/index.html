@@ -1,0 +1,388 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Music Studio</title>
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0b0c12;
+            --panel: #151722;
+            --border: #292c3b;
+            --text: #f5f5fa;
+            --muted: #a5a9bd;
+            --accent: #9d8cff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at top, #252044 0, transparent 48%),
+                var(--bg);
+            color: var(--text);
+        }
+
+        .container {
+            width: min(960px, 92%);
+            margin: auto;
+            padding: 42px 0;
+        }
+
+        header { margin-bottom: 30px; }
+
+        .eyebrow {
+            color: #b9adff;
+            letter-spacing: 3px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: clamp(32px, 6vw, 54px);
+            margin: 12px 0;
+        }
+
+        .subtitle {
+            color: var(--muted);
+            line-height: 1.7;
+            max-width: 680px;
+        }
+
+        .panel {
+            background: rgba(21, 23, 34, 0.94);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 26px;
+            margin-bottom: 20px;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 9px;
+            color: #d9daea;
+        }
+
+        select, input, textarea {
+            width: 100%;
+            padding: 13px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: #0e1018;
+            color: var(--text);
+            font: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 105px;
+            line-height: 1.6;
+        }
+
+        textarea:focus, select:focus, input:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .field-hint, .hint {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .duration-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--muted);
+            margin: 20px 0 10px;
+            font-size: 14px;
+        }
+
+        .duration-row label { margin: 0; }
+
+        input[type="range"] {
+            padding: 0;
+            accent-color: #9d8cff;
+            cursor: pointer;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 22px;
+            border: 0;
+            border-radius: 12px;
+            background: linear-gradient(100deg, #8c76ff, #b66eff);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            filter: brightness(1.1);
+        }
+
+        button:disabled {
+            opacity: 0.55;
+            cursor: wait;
+        }
+
+        .status {
+            color: var(--muted);
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .result { display: none; }
+
+        audio {
+            width: 100%;
+            margin: 16px 0;
+        }
+
+        .downloads {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .downloads a {
+            color: #d0c8ff;
+            text-decoration: none;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+        }
+
+        .downloads a:hover {
+            background: #252044;
+        }
+
+        @media (max-width: 600px) {
+            .fields { grid-template-columns: 1fr; }
+            .panel { padding: 19px; }
+        }
+    </style>
+</head>
+
+<body>
+<main class="container">
+    <header>
+        <div class="eyebrow">GENERATIVE AI · MIDI-GPT</div>
+        <h1>AI Music Studio</h1>
+        <p class="subtitle">
+            Describe the music you want. Generate a MIDI composition,
+            listen to the synthesized audio, and download your files.
+        </p>
+    </header>
+
+    <section class="panel">
+        <h2>Create your composition</h2>
+
+        <div style="margin-bottom: 22px;">
+            <label for="prompt">Describe the music you want</label>
+            <textarea
+                id="prompt"
+                maxlength="1000"
+                placeholder="Example: Create a joyful classical piano melody for a celebration."
+            ></textarea>
+            <p class="field-hint">
+                Supported keywords guide the existing genre and emotion
+                presets. This version does not interpret arbitrary
+                descriptions or generate vocals.
+            </p>
+        </div>
+
+        <div class="fields">
+            <div>
+                <label for="genre">Music genre</label>
+                <select id="genre">
+                    <option value="classical">Classical</option>
+                    <option value="jazz">Jazz</option>
+                    <option value="electronic">Electronic</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="emotion">Desired emotion</label>
+                <select id="emotion">
+                    <option value="happy">Happy</option>
+                    <option value="sad">Sad</option>
+                    <option value="tense">Tense</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="duration-row">
+            <label for="duration">Duration</label>
+            <strong><span id="durationValue">30</span> seconds</strong>
+        </div>
+
+        <input
+            id="duration"
+            type="range"
+            min="10"
+            max="180"
+            step="10"
+            value="30"
+        >
+
+        <button id="generateButton" type="button" onclick="generateMusic()">
+            ✦ Generate Music
+        </button>
+
+        <p id="status" class="status" role="status" aria-live="polite">
+            Ready to create music.
+        </p>
+
+        <p class="hint">
+            Music generation runs locally on your computer.
+            Longer compositions may take several minutes.
+        </p>
+    </section>
+
+    <section id="result" class="panel result">
+        <h2>Your composition</h2>
+        <p id="resultName"></p>
+
+        <audio id="player" controls preload="none"></audio>
+
+        <div class="downloads">
+            <a id="midiDownload" href="#" download>Download MIDI</a>
+            <a id="wavDownload" href="#" download>Download WAV</a>
+        </div>
+    </section>
+
+    <p class="hint">
+        Research prototype using a pretrained MIDI-GPT model.
+        Genre and emotion controls use heuristic musical settings.
+        The perceived emotion and musical quality may vary.
+    </p>
+</main>
+
+<script>
+    const durationInput = document.getElementById("duration");
+    const durationValue = document.getElementById("durationValue");
+    const generateButton = document.getElementById("generateButton");
+    const statusText = document.getElementById("status");
+    const resultPanel = document.getElementById("result");
+    const player = document.getElementById("player");
+
+    let checkingStatus = false;
+
+    durationInput.addEventListener("input", () => {
+        durationValue.textContent = durationInput.value;
+    });
+
+    async function generateMusic() {
+        if (checkingStatus) return;
+
+        checkingStatus = true;
+        generateButton.disabled = true;
+        resultPanel.style.display = "none";
+        player.pause();
+        player.removeAttribute("src");
+        player.load();
+
+        statusText.textContent = "Starting music generation...";
+
+        try {
+            const response = await fetch("/generate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: document.getElementById("prompt").value.trim(),
+                    genre: document.getElementById("genre").value,
+                    emotion: document.getElementById("emotion").value,
+                    duration: Number(durationInput.value)
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.error || "Could not start generation."
+                );
+            }
+
+            await pollStatus();
+
+        } catch (error) {
+            statusText.textContent = "Error: " + error.message;
+        } finally {
+            checkingStatus = false;
+            generateButton.disabled = false;
+        }
+    }
+
+    async function pollStatus() {
+        while (true) {
+            const response = await fetch("/status");
+
+            if (!response.ok) {
+                throw new Error("Could not read generation status.");
+            }
+
+            const data = await response.json();
+
+            statusText.textContent = data.message || "Working...";
+
+            if (data.error) {
+                throw new Error(data.error);
+            }
+
+            if (!data.running && data.midi && data.audio) {
+                const midiUrl =
+                    "/files/midi/" + encodeURIComponent(data.midi);
+
+                const wavUrl =
+                    "/files/audio/" + encodeURIComponent(data.audio);
+
+                document.getElementById("resultName").textContent =
+                    data.midi.replace(/\.mid$/i, "").replaceAll("_", " ");
+
+                document.getElementById("midiDownload").href = midiUrl;
+                document.getElementById("wavDownload").href = wavUrl;
+
+                player.src =
+                    "/audio/" + encodeURIComponent(data.audio);
+
+                player.load();
+                resultPanel.style.display = "block";
+
+                statusText.textContent =
+                    "Complete! Your music is ready.";
+
+                return;
+            }
+
+            if (!data.running) {
+                throw new Error(
+                    data.message || "Generation ended without output files."
+                );
+            }
+
+            await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+    }
+</script>
+</body>
+</html>
