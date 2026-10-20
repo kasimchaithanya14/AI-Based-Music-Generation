@@ -7,6 +7,8 @@ __pycache__/
 build/
 dist/
 *.egg-info/
+*.whl
+outputs/package_check/
 
 # Virtual Environments
 .env
